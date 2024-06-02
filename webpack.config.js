@@ -20,7 +20,8 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
     alias: {
-      '@game': './src/',
+      "@engine": path.resolve(__dirname, './src/engine'),
+      "@game": path.resolve(__dirname, './src/snake2')
     },
   },
   module: {

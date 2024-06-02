@@ -1,4 +1,6 @@
-import { Matrix2D } from "@game/utils/matrix";
+import { Matrix2D } from "@engine/utils/matrix";
+import { Position2D } from "./position";
+import { DEFAULT_PIXEL_RATIO } from "@engine/constants";
 
 export class Renderer2D {
 
@@ -7,14 +9,17 @@ export class Renderer2D {
 
     constructor(
         private context2D: CanvasRenderingContext2D, 
-        private matrix: Matrix2D
+        private matrix: Matrix2D,
+        public debug?: boolean,
     ) {
         this.context2D.imageSmoothingEnabled = false;
+
         this.screen = {
             width: this.context2D.canvas.clientWidth,
             height: this.context2D.canvas.clientHeight
         };
-        this.PIXEL_SIZE = this.getPixelRatio();
+
+        this.PIXEL_SIZE = this.getPixelRatio() || DEFAULT_PIXEL_RATIO;
     }
 
     clear() {
@@ -26,12 +31,13 @@ export class Renderer2D {
     }
     
     renderDebugPixels(matrix: Matrix2D) {
+        this.context2D.lineWidth = 1.5;
         const [matrixWidth, matrixHeight]: number[] = [matrix.width, matrix.height];
         for(let i = 1; i < matrixWidth; i++) {
-            this.drawLine(i*this.PIXEL_SIZE, 0, i*this.PIXEL_SIZE, this.screen.height, 1, '#00000030');
+            this.drawLine(i*this.PIXEL_SIZE, 0, i*this.PIXEL_SIZE, this.screen.height, 1, '#000000');
         }
         for(let i = 1; i < matrixHeight; i++) {
-            this.drawLine(0, i*this.PIXEL_SIZE, this.screen.width, i*this.PIXEL_SIZE, 1, '#00000030');
+            this.drawLine(0, i*this.PIXEL_SIZE, this.screen.width, i*this.PIXEL_SIZE, 1, '#000000');
         }
     }
     
@@ -45,8 +51,8 @@ export class Renderer2D {
         this.context2D.stroke(path);    
     }
 
-    drawPixel(x: number, y: number, size: number[]) {
-        this.context2D.rect(x*size[0], y*size[1], size[0], size[1]);
+    drawPixel(x: number, y: number, [width, height]: [number, number]) {
+        this.context2D.rect(x*width, y*height, width, height);
         this.context2D.fill();
     }
 
@@ -59,5 +65,10 @@ export class Renderer2D {
                 this.drawPixel(pixel, row, [this.PIXEL_SIZE, this.PIXEL_SIZE])
             }
         }
+        if (this.debug) this.renderDebugPixels(matrix);
+    }
+
+    public getCenter(): Position2D {
+        return new Position2D(this.matrix.width / 2, this.matrix.height / 2)
     }
 }

@@ -66,8 +66,11 @@
       "skipLibCheck": false,                     /* Skip type checking of declaration files. */
       "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
       "paths": {
+        "@engine/*": [
+          "src/engine/*"
+        ],
         "@game/*": [
-          "src/*"
+          "src/snake2/*"
         ],
       },
     },

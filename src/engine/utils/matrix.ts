@@ -7,18 +7,22 @@ export enum Matrix2DDirection {
     LEFT
 }
 
+export type MatrixProp = number[][];
+
 export class Matrix2D {
     
-    private matrixArray: number[][] = [];
+    private matrixArray: MatrixProp = [];
 
     private direction: Matrix2DDirection = Matrix2DDirection.LEFT;
-    
+
     constructor(height: number, width: number) {
         for (let i = 0; i < height; i++) {
-            let row: number[] = [];
+            const row: number[] = [];
+
             for(let j = 0; j < width; j++) {
                 row.push(0);
             }
+
             this.matrixArray.push(row);
         }
     }
@@ -47,15 +51,18 @@ export class Matrix2D {
         this.matrixArray = Array(this.height).fill(Array(this.width).fill(0));
     }
 
-    static fromArray(array: number[][]): Matrix2D {
+    static fromArray(array: MatrixProp): Matrix2D {
         const [height, width]: number[] = [array.length, array[0].length];
         const matrix = new Matrix2D(height, width);
+
         for (let i = 0; i < height; i++) {
             for (let j = 0; j < width; j++) {
                 if (array[i][j] === 0) continue;
+
                 matrix.fillElement(j, i, true);
             }
         }
+
         return matrix;
     }
 
@@ -87,17 +94,20 @@ export class Matrix2D {
           }
         }
         this.matrixArray = result;
+
         return this;
     }
 
     public add(m2: Matrix2D, offset: Position2D): Matrix2D {
         const m2Array = m2.getMatrixAsArray();
+
         for (let i = 0; i < m2.height; i++) {
-            for(let j = 0; j < m2.width; j++) {
+            for (let j = 0; j < m2.width; j++) {
                 if (this.matrixArray[i + offset.y][j + offset.x] === 1) continue;
                 this.fillElement(j + offset.x, i + offset.y, Boolean(m2Array[i][j]));
             }
         }
+
         return this;
     }
 }

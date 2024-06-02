@@ -1,3 +1,3 @@
-import Game  from './game';
+import { SnakeII }  from './snake2';
 
-new Game();
+new SnakeII({ difficulty: 0 });
